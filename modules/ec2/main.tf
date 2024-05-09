@@ -1,5 +1,16 @@
+terraform {
+  required_version = "~> 1.5"
+
+  required_providers {
+    aws = {
+      version = "~> 4.0"
+      source  = "hashicorp/aws"
+    }
+  }
+}
+
 provider "aws" {
-  region = "us-east-1" # Change to your desired region
+  region = var.region # Change to your desired region
 }
 
 resource "aws_security_group" "ec2_instance_sg" {
@@ -46,22 +57,20 @@ resource "aws_key_pair" "generated_key" {
 
 # Create EC2 instance
 resource "aws_instance" "ec2_instance" {
-  ami                    = var.ami.id
-  instance_type          = var.ami.instance_type
-  subnet_id              = var.subnet
-  key_name               = var.name
-  availability_zone      = var.availability_zone
-  security_groups        = [aws_security_group.ec2_instance_sg.id]
-  ebs_optimized          = var.ebs_optimized
+  ami               = var.ami.id
+  instance_type     = var.ami.instance_type
+  subnet_id         = var.subnet
+  key_name          = var.name
+  availability_zone = var.availability_zone
+  security_groups   = [aws_security_group.ec2_instance_sg.id]
+  ebs_optimized     = var.ebs_optimized
   root_block_device {
-    volume_type           = var.root_volume_type
-    volume_size           = var.root_volume_size
+    volume_type = var.root_volume_type
+    volume_size = var.root_volume_size
   }
-  
+
   # Add any other configuration options you need for your EC2 instance
 
   tags = var.tags
 
 }
-
-

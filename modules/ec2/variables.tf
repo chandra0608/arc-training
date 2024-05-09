@@ -1,3 +1,8 @@
+variable "region" {
+  type        = string
+  default     = "us-east-1"
+  description = "AWS region"
+}
 variable "vpc_id" {
   description = "The ID of the VPC where the security group and EC2 instance will be created."
 }
@@ -8,7 +13,7 @@ variable "name" {
 
 variable "ami" {
   description = "The AMI to use for the EC2 instance."
-  type        = map
+  type        = map(any)
 }
 
 variable "subnet" {
@@ -35,8 +40,8 @@ variable "key_name" {
 }
 
 variable "security_group_name" {
-  description = "The name prefix for key pair"
-  type = string
+  description = "The name of the ec2 security group"
+  type        = string
 }
 
 variable "root_volume_type" {
@@ -62,7 +67,7 @@ variable "tags" {
 
 variable "ingress_rules" {
   description = "A list of ingress rules for the security group."
-  type        = list(object({
+  type = list(object({
     from_port   = number
     to_port     = number
     protocol    = string
@@ -72,7 +77,7 @@ variable "ingress_rules" {
 
 variable "egress_rules" {
   description = "A list of egress rules for the security group."
-  type        = list(object({
+  type = list(object({
     from_port   = number
     to_port     = number
     protocol    = string

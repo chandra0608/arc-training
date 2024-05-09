@@ -1,5 +1,15 @@
+terraform {
+  required_version = "~> 1.5"
+
+  required_providers {
+    aws = {
+      version = "~> 4.0"
+      source  = "hashicorp/aws"
+    }
+  }
+}
 provider "aws" {
-  region = "us-east-1" # Change to your desired region
+  region = var.region # Change to your desired region
 }
 
 resource "aws_vpc" "main" {
@@ -14,12 +24,12 @@ resource "aws_vpc" "main" {
 }
 
 resource "aws_subnet" "public" {
-  count                  = length(var.public_subnet_cidr_blocks)
-  vpc_id                 = aws_vpc.main.id
-  cidr_block             = var.public_subnet_cidr_blocks[count.index]
-  availability_zone      = var.availability_zones[count.index]
+  count                   = length(var.public_subnet_cidr_blocks)
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = var.public_subnet_cidr_blocks[count.index]
+  availability_zone       = var.availability_zones[count.index]
   map_public_ip_on_launch = true
-  tags                   = merge(var.public_subnet_tags, { "Name" = "${var.vpc_name}-public-${count.index + 1}" })
+  tags                    = merge(var.public_subnet_tags, { "Name" = "${var.vpc_name}-public-${count.index + 1}" })
 }
 
 resource "aws_subnet" "private" {
