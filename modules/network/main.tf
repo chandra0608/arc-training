@@ -1,15 +1,5 @@
-terraform {
-  required_version = "~> 1.5"
-
-  required_providers {
-    aws = {
-      version = "~> 4.0"
-      source  = "hashicorp/aws"
-    }
-  }
-}
 provider "aws" {
-  region = var.region # Change to your desired region
+  region = "us-east-1" # Change to your desired region
 }
 
 resource "aws_vpc" "main" {
@@ -67,4 +57,14 @@ resource "aws_nat_gateway" "nat" {
 
 resource "aws_eip" "nat" {
   count = var.enable_nat_gateway ? length(aws_subnet.private) : 0
+}
+
+resource "aws_route_table" "private" {
+  vpc_id = aws_vpc.main.id
+}
+
+resource "aws_route_table_association" "private" {
+  count          = length(aws_subnet.private)
+  subnet_id      = aws_subnet.private[count.index].id
+  route_table_id = aws_route_table.private.id
 }

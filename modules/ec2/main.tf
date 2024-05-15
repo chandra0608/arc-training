@@ -41,8 +41,6 @@ resource "aws_security_group" "ec2_instance_sg" {
   tags = var.tags
 }
 
-
-
 resource "tls_private_key" "httpdkey" {
   algorithm = "RSA"
   rsa_bits  = 4096
